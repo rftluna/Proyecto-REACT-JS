@@ -7,21 +7,27 @@ import { ItemDetailContainer } from "./components/ItemDetailContainer/ItemDetail
 import { CartView } from "./components/Cart/CartView";
 
 function App() {
-  return (
-    <>
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<ItemListContainer />} />
-          <Route path="/cart" element={<CartView />} />
-          <Route path="/product/:id" element={<ItemDetailContainer />} />
-          {/* opcional: filtro por categorias */}
-          <Route path="/category/:category" element={<ItemListContainer />} />
-        </Routes>
-      </main>
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <main>
+                <Routes>
+                    <Route path="/" element={<ItemListContainer />} />
+                    <Route path="/cart" element={<CartView />} />
+                    <Route
+                        path="/product/:id"
+                        element={<ItemDetailContainer />}
+                    />
+                    {/* opcional: filtro por categorias */}
+                    <Route
+                        path="/category/:category"
+                        element={<ItemListContainer />}
+                    />
+                </Routes>
+            </main>
+            <Footer />
+        </>
+    );
 }
 
 export default App;
