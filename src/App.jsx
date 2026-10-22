@@ -5,6 +5,8 @@ import { Header } from "./components/Header/Header";
 import { ItemListContainer } from "./components/ItemListContainer/ItemListContainer";
 import { ItemDetailContainer } from "./components/ItemDetailContainer/ItemDetailContainer";
 import { CartView } from "./components/Cart/CartView";
+import { ProductFormContainer } from "./components/adminComponents/ProductForm/ProductFormContainer";
+import { ProductSuccess } from "./components/adminComponents/ProductSuccess";
 
 function App() {
     return (
