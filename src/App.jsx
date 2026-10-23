@@ -15,16 +15,21 @@ function App() {
             <main>
                 <Routes>
                     <Route path="/" element={<ItemListContainer />} />
-                    <Route path="/cart" element={<CartView />} />
-                    <Route
+                    <Route /* Carrito */ path="/cart" element={<CartView />} />
+                    <Route /* Productos del carrito */
                         path="/product/:id"
                         element={<ItemDetailContainer />}
                     />
-                    {/* opcional: filtro por categorias */}
                     <Route
                         path="/category/:category"
                         element={<ItemListContainer />}
                     />
+
+                    {/* Administración de productos */}
+                    <Route path="/admin" element={<ProductFormContainer />} />
+
+                    {/* Confirmación de producto */}
+                    <Route path="/admin/success" element={<ProductSuccess />} />
                 </Routes>
             </main>
             <Footer />
