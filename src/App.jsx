@@ -54,6 +54,9 @@ function App() {
 
                 {/* Nueva ruta para ver el listado completo con opciones de Editar y Eliminar */}
                 <Route path="products" element={<ProductAdminListContainer />} />
+
+                {/* Agrego esta línea para que la edición en dashboard funcione */}
+                <Route path="products/edit/:id" element={<ProductFormContainer />} />
             </Route>
         </Routes>
     );

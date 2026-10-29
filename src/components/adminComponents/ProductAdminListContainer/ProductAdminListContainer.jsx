@@ -39,7 +39,7 @@ export const ProductAdminListContainer = () => {
     };
 
     if (loading) {
-        return <p className="admin-loading">Cargando productos...</p>;
+        return <p className="admin-loading">Cargando productos. Espera unos instantes porfavor...</p>;
     }
 
     return (
