@@ -8,6 +8,7 @@ import { CartView } from "./components/Cart/CartView";
 import { ProductFormContainer } from "./components/adminComponents/ProductForm/ProductFormContainer";
 import { ProductSuccess } from "./components/adminComponents/ProductSuccess";
 import { Dashboard } from "./components/adminComponents/Dashboard/Dashboard";
+import { ProductAdminListContainer } from "./components/adminComponents/ProductAdminListContainer/ProductAdminListContainer";
 
 import { Login } from "./components/Login/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
@@ -22,17 +23,17 @@ function App() {
             <Route element={<PublicLayout />}>
                 <Route path="/" element={<ItemListContainer />} />
 
-                {/*-------------------------------- RUTAS PUBLICAS -------------------------------- */}
                 {/* Ruta opcional para filtrar categorias */}
-
                 <Route path="/category/:category" element={<ItemListContainer />} />
 
                 <Route path="/product/:id" element={<ItemDetailContainer />} />
 
                 <Route path="/cart" element={<CartView />} />
             </Route>
-            {/* LOGIN DE ADMINISTRACIÓN */} {/* Login por fuera de AdminLayout para acceder si no estamos logueados */}
+
+            {/* LOGIN DE ADMINISTRACIÓN */}
             <Route path="/admin/login" element={<Login />} />
+
             {/*-------------------------------- RUTAS PROTEGIDAS DE ADMINISTRACION  -------------------------------- */}
             <Route
                 path="/admin"
@@ -50,6 +51,9 @@ function App() {
                 <Route path="products/new" element={<ProductFormContainer />} />
 
                 <Route path="products/success/:id" element={<ProductSuccess />} />
+
+                {/* Nueva ruta para ver el listado completo con opciones de Editar y Eliminar */}
+                <Route path="products" element={<ProductAdminListContainer />} />
             </Route>
         </Routes>
     );
