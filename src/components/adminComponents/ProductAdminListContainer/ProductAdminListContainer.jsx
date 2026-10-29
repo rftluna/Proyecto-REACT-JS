@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db } from "../../../firebase/config";
 import { Link } from "react-router-dom";
 import "./ProductAdminListContainer.css";
 
