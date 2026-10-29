@@ -1,40 +1,84 @@
-import { Route, Routes } from "react-router-dom";
+
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Footer } from "./components/Footer/Footer";
-import { Header } from "./components/Header/Header";
+
 import { ItemListContainer } from "./components/ItemListContainer/ItemListContainer";
 import { ItemDetailContainer } from "./components/ItemDetailContainer/ItemDetailContainer";
 import { CartView } from "./components/Cart/CartView";
+
 import { ProductFormContainer } from "./components/adminComponents/ProductForm/ProductFormContainer";
 import { ProductSuccess } from "./components/adminComponents/ProductSuccess";
+import { Dashboard } from "./components/adminComponents/Dashboard/Dashboard";
+
+import { Login } from "./components/Login/Login";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
+
+import { PublicLayout } from "./layouts/PublicLayout";
+import { AdminLayout } from "./layouts/AdminLayout";
 
 function App() {
-    return (
-        <>
-            <Header />
-            <main>
-                <Routes>
-                    <Route path="/" element={<ItemListContainer />} />
-                    <Route /* Carrito */ path="/cart" element={<CartView />} />
-                    <Route /* Productos del carrito */
-                        path="/product/:id"
-                        element={<ItemDetailContainer />}
-                    />
-                    <Route
-                        path="/category/:category"
-                        element={<ItemListContainer />}
-                    />
+  return (
+    <Routes>
+      {/* RUTAS PÚBLICAS */}
+      <Route element={<PublicLayout />}>
+        <Route
+          path="/"
+          element={<ItemListContainer />}
+        />
 
-                    {/* Administración de productos */}
-                    <Route path="/admin" element={<ProductFormContainer />} />
+        <Route
+          path="/category/:category"
+          element={<ItemListContainer />}
+        />
 
-                    {/* Confirmación de producto */}
-                    <Route path="/admin/success" element={<ProductSuccess />} />
-                </Routes>
-            </main>
-            <Footer />
-        </>
-    );
+        <Route
+          path="/product/:id"
+          element={<ItemDetailContainer />}
+        />
+
+        <Route
+          path="/cart"
+          element={<CartView />}
+        />
+      </Route>
+
+      {/* LOGIN DE ADMINISTRACIÓN */}
+      <Route
+        path="/admin/login"
+        element={<Login />}
+      />
+
+      {/* RUTAS PROTEGIDAS DE ADMINISTRACIÓN */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<Navigate to="dashboard" replace />}
+        />
+
+        <Route
+          path="dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="products/new"
+          element={<ProductFormContainer />}
+        />
+
+        <Route
+          path="products/success/:id"
+          element={<ProductSuccess />}
+        />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
