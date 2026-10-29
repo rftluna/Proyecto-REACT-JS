@@ -1,24 +1,26 @@
 export const validateProduct = (product) => {
-  const errors = {};
+    const errors = {};
 
-  if (!product.name.trim()) {
-    errors.name = "El nombre es obligatorio";
-  }
+    if (!product.name.trim()) {
+        errors.name = "El nombre es obligatorio";
+    }
 
-  if (!product.price || product.price <= 0) {
-    errors.price = "El precio debe ser mayor que 0";
-  }
+    if (!product.price || product.price <= 0) {
+        errors.price = "El precio debe ser mayor que 0";
+    }
 
-  if (!product.description.trim()) {
-    errors.description = "La descripción es obligatoria";
-  }
+    if (!product.description.trim()) {
+        errors.description = "La descripción es obligatoria";
+    }
 
-  if (!product.category.trim()) {
-    errors.category = "La categoria es obligatoria";
-  }
+    if (!product.category.trim()) {
+        errors.category = "La categoría es obligatoria";
+    }
 
-  if (!product.file) {
-    errors.file = "Debes seleccionar una imagen";
-  }
-  return errors;
+    // Validación ajustada para permitir alta y futura edición
+    if (!product.file && !product.image) {
+        errors.file = "Debes seleccionar una imagen";
+    }
+
+    return errors;
 };

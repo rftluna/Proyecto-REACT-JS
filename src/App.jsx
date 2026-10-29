@@ -1,4 +1,3 @@
-
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 
@@ -17,68 +16,43 @@ import { PublicLayout } from "./layouts/PublicLayout";
 import { AdminLayout } from "./layouts/AdminLayout";
 
 function App() {
-  return (
-    <Routes>
-      {/* RUTAS PÚBLICAS */}
-      <Route element={<PublicLayout />}>
-        <Route
-          path="/"
-          element={<ItemListContainer />}
-        />
+    return (
+        <Routes>
+            {/*-------------------------------- RUTAS PUBLICAS -------------------------------- */}
+            <Route element={<PublicLayout />}>
+                <Route path="/" element={<ItemListContainer />} />
 
-        <Route
-          path="/category/:category"
-          element={<ItemListContainer />}
-        />
+                {/*-------------------------------- RUTAS PUBLICAS -------------------------------- */}
+                {/* Ruta opcional para filtrar categorias */}
 
-        <Route
-          path="/product/:id"
-          element={<ItemDetailContainer />}
-        />
+                <Route path="/category/:category" element={<ItemListContainer />} />
 
-        <Route
-          path="/cart"
-          element={<CartView />}
-        />
-      </Route>
+                <Route path="/product/:id" element={<ItemDetailContainer />} />
 
-      {/* LOGIN DE ADMINISTRACIÓN */}
-      <Route
-        path="/admin/login"
-        element={<Login />}
-      />
+                <Route path="/cart" element={<CartView />} />
+            </Route>
+            {/* LOGIN DE ADMINISTRACIÓN */} {/* Login por fuera de AdminLayout para acceder si no estamos logueados */}
+            <Route path="/admin/login" element={<Login />} />
+            {/*-------------------------------- RUTAS PROTEGIDAS DE ADMINISTRACION  -------------------------------- */}
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute>
+                        <AdminLayout />
+                    </ProtectedRoute>
+                }
+            >
+                {/* RUTAS ADMINISTRACIÓN */}
+                <Route index element={<Navigate to="dashboard" replace />} />
 
-      {/* RUTAS PROTEGIDAS DE ADMINISTRACIÓN */}
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route
-          index
-          element={<Navigate to="dashboard" replace />}
-        />
+                <Route path="dashboard" element={<Dashboard />} />
 
-        <Route
-          path="dashboard"
-          element={<Dashboard />}
-        />
+                <Route path="products/new" element={<ProductFormContainer />} />
 
-        <Route
-          path="products/new"
-          element={<ProductFormContainer />}
-        />
-
-        <Route
-          path="products/success/:id"
-          element={<ProductSuccess />}
-        />
-      </Route>
-    </Routes>
-  );
+                <Route path="products/success/:id" element={<ProductSuccess />} />
+            </Route>
+        </Routes>
+    );
 }
 
 export default App;

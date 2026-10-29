@@ -43,10 +43,7 @@ const parsePrice = (price) => {
         normalizedPrice = normalizedPrice.replace(/\./g, "").replace(",", ".");
     } else {
         // Separador de miles argentino: 12.500
-        normalizedPrice = normalizedPrice.replace(
-            /\.(?=\d{3}(?:$|[^0-9]))/g,
-            ""
-        );
+        normalizedPrice = normalizedPrice.replace(/\.(?=\d{3}(?:$|[^0-9]))/g, "");
     }
 
     const parsedPrice = Number(normalizedPrice);
@@ -67,9 +64,7 @@ export const CartProvider = ({ children }) => {
         const alreadyExists = cart.some((element) => element.id === item.id);
 
         setCart((previousCart) => {
-            const existingProduct = previousCart.find(
-                (element) => element.id === item.id
-            );
+            const existingProduct = previousCart.find((element) => element.id === item.id);
 
             if (existingProduct) {
                 return previousCart.map((element) =>
@@ -86,8 +81,7 @@ export const CartProvider = ({ children }) => {
                 ...previousCart,
                 {
                     ...item,
-                    quantity:
-                        Number(item.quantity) > 0 ? Number(item.quantity) : 1
+                    quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1
                 }
             ];
         });
@@ -101,9 +95,7 @@ export const CartProvider = ({ children }) => {
 
     // Eliminar completamente un producto del carrito.
     const removeItem = (id) => {
-        setCart((previousCart) =>
-            previousCart.filter((element) => element.id !== id)
-        );
+        setCart((previousCart) => previousCart.filter((element) => element.id !== id));
 
         alert("Producto eliminado ✅");
     };
@@ -115,10 +107,7 @@ export const CartProvider = ({ children }) => {
 
     // Contar todas las unidades, incluyendo productos repetidos.
     const getTotalItems = () => {
-        return cart.reduce(
-            (total, item) => total + (Number(item.quantity) || 1),
-            0
-        );
+        return cart.reduce((total, item) => total + (Number(item.quantity) || 1), 0);
     };
 
     // Calcular el total numérico de la compra.
@@ -148,7 +137,5 @@ export const CartProvider = ({ children }) => {
         checkout
     };
 
-    return (
-        <CartContext.Provider value={values}>{children}</CartContext.Provider>
-    );
+    return <CartContext.Provider value={values}>{children}</CartContext.Provider>;
 };
