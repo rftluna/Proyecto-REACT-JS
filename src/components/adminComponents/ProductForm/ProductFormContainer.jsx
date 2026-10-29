@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase/config";
 import { ProductFormUI } from "./ProductFormUI";
 import { validateProduct } from "../../../utils/validateProduct";
 import { uploadImage } from "../../../services/uploadImage";
@@ -7,76 +9,109 @@ import { createProduct } from "../../../services/productsService";
 import "./ProductFormContainer.css";
 
 export const ProductFormContainer = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [file, setFile] = useState(null);
-  const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    category: "",
-    description: "",
-  });
+    const navigate = useNavigate();
+    const { id } = useParams(); // Capturamos el ID de la URL si estamos editando
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [file, setFile] = useState(null);
+    const [product, setProduct] = useState({
+        name: "",
+        price: "",
+        category: "",
+        description: "",
+        image: "" // Agregamos image por si viene de la base de datos al editar
+    });
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0] || null;
-    setFile(file);
-  };
+    // Si hay un ID, buscamos el producto en Firestore para rellenar el formulario (Modo Edición)
+    useEffect(() => {
+        if (id) {
+            const fetchProductToEdit = async () => {
+                try {
+                    setLoading(true);
+                    const docRef = doc(db, "products", id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        setProduct(docSnap.data());
+                    } else {
+                        console.error("El producto no existe");
+                    }
+                } catch (error) {
+                    console.error("Error al obtener el producto para editar: ", error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchProductToEdit();
+        }
+    }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProduct({ ...product, [name]: value });
+    };
 
-    //modificamos los estados para el "loading mientras se procesa"
-    setErrors({});
-    setLoading(true);
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0] || null;
+        setFile(selectedFile);
+    };
 
-    //validar inputs
-    const newErrors = validateProduct({ ...product, file });
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrors({});
+        setLoading(true);
 
-    try {
-      //subir la imagen
-      const imageUrl = await uploadImage(file);
+        // Validar inputs (si estás editando y no cambias la imagen, puedes ajustar tu validador si es necesario)
+        const newErrors = validateProduct({ ...product, file });
+        if (Object.keys(newErrors).length > 0 && !id) {
+            setErrors(newErrors);
+            setLoading(false);
+            return;
+        }
 
-      //armar la estructura del producto
-      const productData = {
-        ...product,
-        price: Number(product.price),
-        image: imageUrl,
-      };
+        try {
+            let imageUrl = product.image;
 
-      //alta
-      const id = await createProduct(productData);
-      //vaciar formulario
-      setProduct({ name: "", price: "", category: "", description: "" });
-      setFile(null);
+            // Si el usuario seleccionó una nueva imagen al editar o crear, la subimos
+            if (file) {
+                imageUrl = await uploadImage(file);
+            }
 
-      //navegar a la pagina de exito
-      navigate(`/admin/products/success/${id}`, { replace: true });
-    } catch (error) {
-      setErrors({ general: error.message });
-    } finally {
-      setLoading(false);
-    }
-  };
+            const productData = {
+                ...product,
+                price: Number(product.price),
+                image: imageUrl
+            };
 
-  return (
-    <ProductFormUI
-      product={product}
-      errors={errors}
-      loading={loading}
-      onChange={handleChange}
-      onFileChange={handleFileChange}
-      onSubmit={handleSubmit}
-    />
-  );
+            if (id) {
+                // MODO EDICIÓN: Actualizamos el documento existente
+                const docRef = doc(db, "products", id);
+                await updateDoc(docRef, productData);
+                alert("¡Producto actualizado con éxito!");
+                navigate("/admin/products", { replace: true });
+            } else {
+                // MODO CREACIÓN: Alta de un producto nuevo
+                const newId = await createProduct(productData);
+                setProduct({ name: "", price: "", category: "", description: "", image: "" });
+                setFile(null);
+                navigate(`/admin/products/success/${newId}`, { replace: true });
+            }
+        } catch (error) {
+            setErrors({ general: error.message });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <ProductFormUI
+            product={product}
+            errors={errors}
+            loading={loading}
+            isEditing={Boolean(id)} // Indicador útil por si quieres cambiar el título en la UI
+            onChange={handleChange}
+            onFileChange={handleFileChange}
+            onSubmit={handleSubmit}
+        />
+    );
 };
