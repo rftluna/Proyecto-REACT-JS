@@ -69,21 +69,21 @@ export const ProductFormContainer = () => {
             return;
         }
 
-        try {
+        try { //Ahora maneja 2 casos: nuevo y edit. La imagen puede existir
             let imageUrl = product.image;
 
             // Si el usuario seleccionó una nueva imagen al editar o crear, la subimos
             if (file) {
-                imageUrl = await uploadImage(file);
+                imageUrl = await uploadImage(file);  //subir la imagen, con el retorno de imgBB (nueva URL)
             }
-
+            // armar el producto completo
             const productData = {
                 ...product,
                 price: Number(product.price),
                 image: imageUrl
             };
 
-            if (id) {
+            if (id) { //este id viene se useParams para actualizar o modificar el producto
                 // MODO EDICIÓN: Actualizamos el documento existente
                 const docRef = doc(db, "products", id);
                 await updateDoc(docRef, productData);
@@ -91,7 +91,9 @@ export const ProductFormContainer = () => {
                 navigate("/admin/products", { replace: true });
             } else {
                 // MODO CREACIÓN: Alta de un producto nuevo
+                // alta
                 const newId = await createProduct(productData);
+                // vaciar
                 setProduct({ name: "", price: "", category: "", description: "", image: "" });
                 setFile(null);
                 navigate(`/admin/products/success/${newId}`, { replace: true });
@@ -108,7 +110,7 @@ export const ProductFormContainer = () => {
             product={product}
             errors={errors}
             loading={loading}
-            isEditing={Boolean(id)} // Indicador útil por si quieres cambiar el título en la UI
+            isEditing={Boolean(id)} // Indicador útil por si se quiere cambiar el título en la UI
             onChange={handleChange}
             onFileChange={handleFileChange}
             onSubmit={handleSubmit}

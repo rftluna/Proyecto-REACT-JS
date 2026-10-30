@@ -22,19 +22,19 @@ export const Dashboard = () => {
             </header>
 
             <section className="dashboard-actions">
-                <h3>Acciones rápidas</h3>
+                <h3>Acciones rápidas / Gestion de Productos </h3>
 
                 <div className="actions-grid">
                     <Link to="/admin/products/new" className="action-card">
-                        ➕ Cargar
+                        ➕ Cargar / Agregar productos
                     </Link>
 
                     <Link to="/admin/products" className="action-card">
-                        ✏️ Modificar / Ver todos
+                        ✏️ Modificar productos / Ver todos
                     </Link>
 
                     <Link to="/admin/products" className="action-card">
-                        🗑️ Eliminar
+                        🗑️ Eliminar productos
                     </Link>
                 </div>
             </section>
