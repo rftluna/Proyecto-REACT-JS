@@ -8,6 +8,14 @@ import { uploadImage } from "../../../services/uploadImage";
 import { createProduct } from "../../../services/productsService";
 import "./ProductFormContainer.css";
 
+/*------------------------------------------------------------------------------*/
+/*----------            EDITAR el utils/validateProduct.js         -------------*/
+/*------------------------------------------------------------------------------*/
+
+//En el caso de utilizar este formulario con doble uso (carga y edicion) el archivo que valida las entradas
+// del producto deberia evaluar el caso de la imagen existente.
+//Evalua file, para la carga de foto nueva y product.image cuande viene de DB
+
 export const ProductFormContainer = () => {
     const navigate = useNavigate();
     const { id } = useParams(); // Capturamos el ID de la URL si estamos editando
@@ -23,7 +31,7 @@ export const ProductFormContainer = () => {
         image: "" // Agregamos image por si viene de la base de datos al editar
     });
 
-    // Si hay un ID, buscamos el producto en Firestore para rellenar el formulario (Modo Edición)
+    // Si hay un ID, es porque es para editar. Buscamos el producto en Firestore para rellenar el formulario (Modo Edición)
     useEffect(() => {
         if (id) {
             const fetchProductToEdit = async () => {

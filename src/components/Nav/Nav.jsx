@@ -10,11 +10,11 @@ export const Nav = () => {
         <nav>
             <ul className="nav-list">
                 <li>
-                    <Link to={"/"}>Home</Link>
+                    <Link to={"/"}>Inicio</Link>
                 </li>
                 <li>
                     <Link to={"/cart"}>
-                        Carrito
+                        🛒Carrito 🛒
                         {totalItems > 0 && (
                             <span className="incart">{totalItems}</span>
                         )}

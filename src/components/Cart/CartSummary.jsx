@@ -7,9 +7,9 @@ export const CartSummary = () => {
 
   return (
     <>
-      <p>TOTAL A PAGAR:👉 ${total} </p>
+      <p>TOTAL A PAGAR:👉 AR${total} </p>
       <button className="btn bg-success primary" onClick={checkout}>
-        FINALIZAR COMPRA
+        FINALIZAR COMPRA 🤝✅
       </button>
     </>
   );

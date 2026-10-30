@@ -44,14 +44,14 @@ export const CartItem = ({ item }) => {
                 </p>
 
                 <p>
-                    <strong>Subtotal:</strong> {formatPrice(subtotal)}
+                    <strong>Subtotal: AR</strong> {formatPrice(subtotal)}
                 </p>
 
                 <button
                     className="btn bg-delete primary"
                     onClick={() => removeItem(item.id)}
                 >
-                    Eliminar
+                    Eliminar Item
                 </button>
             </div>
         </Item>
