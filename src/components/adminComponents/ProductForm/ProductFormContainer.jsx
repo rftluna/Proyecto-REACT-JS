@@ -6,6 +6,7 @@ import { ProductFormUI } from "./ProductFormUI";
 import { validateProduct } from "../../../utils/validateProduct";
 import { uploadImage } from "../../../services/uploadImage";
 import { createProduct } from "../../../services/productsService";
+import { toast } from "react-toastify"; // IMPORTAMOS TOASTIFY PARA LAS ALERTAS ANIMADAS
 import "./ProductFormContainer.css";
 
 /*------------------------------------------------------------------------------*/
@@ -42,10 +43,11 @@ export const ProductFormContainer = () => {
                     if (docSnap.exists()) {
                         setProduct(docSnap.data());
                     } else {
-                        console.error("El producto no existe");
+                        toast.error("❌ El producto que intentas editar no existe.");
                     }
                 } catch (error) {
                     console.error("Error al obtener el producto para editar: ", error);
+                    toast.error("💥 Error de conexión al cargar datos del producto.");
                 } finally {
                     setLoading(false);
                 }
@@ -74,15 +76,17 @@ export const ProductFormContainer = () => {
         if (Object.keys(newErrors).length > 0 && !id) {
             setErrors(newErrors);
             setLoading(false);
+            toast.warn("⚠️ Revisa los campos obligatorios del formulario.");
             return;
         }
 
-        try { //Ahora maneja 2 casos: nuevo y edit. La imagen puede existir
+        try {
+            //Ahora maneja 2 casos: nuevo y edit. La imagen puede existir
             let imageUrl = product.image;
 
             // Si el usuario seleccionó una nueva imagen al editar o crear, la subimos
             if (file) {
-                imageUrl = await uploadImage(file);  //subir la imagen, con el retorno de imgBB (nueva URL)
+                imageUrl = await uploadImage(file); //subir la imagen, con el retorno de imgBB (nueva URL)
             }
             // armar el producto completo
             const productData = {
@@ -91,16 +95,29 @@ export const ProductFormContainer = () => {
                 image: imageUrl
             };
 
-            if (id) { //este id viene se useParams para actualizar o modificar el producto
+            if (id) {
+                //este id viene se useParams para actualizar o modificar el producto
                 // MODO EDICIÓN: Actualizamos el documento existente
                 const docRef = doc(db, "products", id);
                 await updateDoc(docRef, productData);
-                alert("¡Producto actualizado con éxito!");
+
+                // DISPARAMOS NOTIFICACIÓN FLOTANTE DE ÉXITO AL EDITAR
+                toast.success("📝 ¡Producto actualizado con éxito!", {
+                    position: "top-right",
+                    autoClose: 2500
+                });
+
                 navigate("/admin/products", { replace: true });
             } else {
                 // MODO CREACIÓN: Alta de un producto nuevo
-                // alta
                 const newId = await createProduct(productData);
+
+                // DISPARAMOS NOTIFICACIÓN FLOTANTE DE ÉXITO AL CREAR UNO NUEVO
+                toast.success("🆕 ¡Producto creado y añadido al catálogo!", {
+                    position: "top-right",
+                    autoClose: 2500
+                });
+
                 // vaciar
                 setProduct({ name: "", price: "", category: "", description: "", image: "" });
                 setFile(null);
@@ -108,6 +125,7 @@ export const ProductFormContainer = () => {
             }
         } catch (error) {
             setErrors({ general: error.message });
+            toast.error(`❌ Error al procesar el producto: ${error.message}`);
         } finally {
             setLoading(false);
         }

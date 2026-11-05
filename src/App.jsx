@@ -1,65 +1,89 @@
+// 1. ESTILOS GLOBALES Y LIBRERÍAS DE TERCEROS (Siempre van primero)
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify"; // Importamos el contenedor de alertas
+
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 
+// Componentes Públicos
 import { ItemListContainer } from "./components/ItemListContainer/ItemListContainer";
 import { ItemDetailContainer } from "./components/ItemDetailContainer/ItemDetailContainer";
 import { CartView } from "./components/Cart/CartView";
 
+// Componentes de Administración
 import { ProductFormContainer } from "./components/adminComponents/ProductForm/ProductFormContainer";
 import { ProductSuccess } from "./components/adminComponents/ProductSuccess";
 import { Dashboard } from "./components/adminComponents/Dashboard/Dashboard";
 import { ProductAdminListContainer } from "./components/adminComponents/ProductAdminListContainer/ProductAdminListContainer";
 
+// Autenticación y Layouts
 import { Login } from "./components/Login/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
-
 import { PublicLayout } from "./layouts/PublicLayout";
 import { AdminLayout } from "./layouts/AdminLayout";
 
 function App() {
     return (
-        <Routes>
-            {/*-------------------------------- RUTAS PUBLICAS -------------------------------- */}
-            <Route element={<PublicLayout />}>
-                <Route path="/" element={<ItemListContainer />} />
+        <>
+            {/* EL CONTENEDOR DE ALERTAS DEBE ESTAR ACÁ PARA QUE ESCUCHE A TODA LA APP */}
+            <ToastContainer 
+                position="top-right" 
+                autoClose={2500} 
+                hideProgressBar={false} 
+                newestOnTop={false} 
+                closeOnClick 
+                rtl={false} 
+                pauseOnFocusLoss 
+                draggable 
+                pauseOnHover 
+                theme="colored"
+            />
 
-                {/* Ruta opcional para filtrar categorias */}
-                <Route path="/category/:category" element={<ItemListContainer />} />
+            <Routes>
+                {/*-------------------------------- RUTAS PUBLICAS -------------------------------- */}
+                <Route element={<PublicLayout />}>
+                    <Route path="/" element={<ItemListContainer />} />
 
-                <Route path="/product/:id" element={<ItemDetailContainer />} />
+                    {/* Ruta opcional para filtrar categorias */}
+                    <Route path="/category/:category" element={<ItemListContainer />} />
 
-                <Route path="/cart" element={<CartView />} />
-            </Route>
+                    <Route path="/product/:id" element={<ItemDetailContainer />} />
 
-            {/* LOGIN DE ADMINISTRACIÓN */}
-            <Route path="/admin/login" element={<Login />} />
+                    <Route path="/cart" element={<CartView />} />
+                </Route>
 
-            {/*-------------------------------- RUTAS PROTEGIDAS DE ADMINISTRACION  -------------------------------- */}
-            <Route
-                path="/admin"
-                element={
-                    <ProtectedRoute>
-                        <AdminLayout />
-                    </ProtectedRoute>
-                }
-            >
-                {/* RUTAS ADMINISTRACIÓN */}
-                <Route index element={<Navigate to="dashboard" replace />} />
+                {/* LOGIN DE ADMINISTRACIÓN */}
+                <Route path="/admin/login" element={<Login />} />
 
-                <Route path="dashboard" element={<Dashboard />} />
+                {/*-------------------------------- RUTAS PROTEGIDAS DE ADMINISTRACION  -------------------------------- */}
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute>
+                            <AdminLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    {/* RUTAS ADMINISTRACIÓN */}
+                    <Route index element={<Navigate to="dashboard" replace />} />
 
-                <Route path="products/new" element={<ProductFormContainer />} />
+                    <Route path="dashboard" element={<Dashboard />} />
 
-                <Route path="products/success/:id" element={<ProductSuccess />} />
+                    <Route path="products/new" element={<ProductFormContainer />} />
 
-                {/* Nueva ruta para ver el listado completo con opciones de Editar y Eliminar */}
-                <Route path="products" element={<ProductAdminListContainer />} />
+                    <Route path="products/success/:id" element={<ProductSuccess />} />
 
-                {/* Agrego esta línea para que la edición en dashboard funcione */}
-                <Route path="products/edit/:id" element={<ProductFormContainer />} />
-            </Route>
-        </Routes>
+                    {/* Nueva ruta para ver el listado completo con opciones de Editar y Eliminar */}
+                    <Route path="products" element={<ProductAdminListContainer />} />
+
+                    {/* Agrego esta línea para que la edición en dashboard funcione */}
+                    <Route path="products/edit/:id" element={<ProductFormContainer />} />
+                </Route>
+            </Routes>
+        </>
     );
 }
 
 export default App;
+

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // IMPORTAMOS TOASTIFY
 
 /* -------------------------------------------------------------------------- */
 /*                              CREAMOS CONTEXTO                              */
@@ -61,6 +62,7 @@ export const CartProvider = ({ children }) => {
 
     // Agregar productos o incrementar la cantidad si ya existen.
     const addItem = (item) => {
+        // Mantenemos esta constante viva para que no tire error de referencia de JavaScript
         const alreadyExists = cart.some((element) => element.id === item.id);
 
         setCart((previousCart) => {
@@ -86,18 +88,20 @@ export const CartProvider = ({ children }) => {
             ];
         });
 
-        if (alreadyExists) {
-            alert("Se agregó una unidad más del producto 🛒");
-        } else {
-            alert("Producto agregado al carrito 🎉");
-        }
+        // 🔥 CORRECCIÓN CLAVE: Dejamos la lógica limpia. Ya no lanzamos alertas duplicadas acá adentro
+        // porque de eso se encarga exclusivamente ItemDetail.jsx al finalizar la barra de carga.
     };
 
     // Eliminar completamente un producto del carrito.
     const removeItem = (id) => {
         setCart((previousCart) => previousCart.filter((element) => element.id !== id));
 
-        alert("Producto eliminado ✅");
+        // Mantenemos la alerta de eliminación ya que solo ocurre en el carrito
+        toast.warn("🗑️ Producto eliminado del carrito", {
+            position: "top-right",
+            autoClose: 2000,
+            theme: "colored"
+        });
     };
 
     // Vaciar el carrito.
@@ -122,7 +126,11 @@ export const CartProvider = ({ children }) => {
 
     // Checkout.
     const checkout = () => {
-        alert("Su compra ha sido realizada 🎉");
+        toast.success("🥳 ¡Su compra ha sido realizada con éxito!", {
+            position: "top-right",
+            autoClose: 3500,
+            theme: "colored"
+        });
         clearCart();
         navigate("/");
     };
