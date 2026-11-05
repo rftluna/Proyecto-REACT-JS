@@ -1,67 +1,93 @@
+
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { Navbar, Nav as BootstrapNav, Container } from "react-bootstrap";
 import "./Nav.css";
 
 export const Nav = () => {
     const { getTotalItems } = useCart();
     const totalItems = getTotalItems();
-    const navigate = useNavigate();
-    const { category } = useParams(); // Detecta la sección activa para marcarla
 
-    // Estado para ocultar/mostrar las categorías horizontales con el botón
-    const [menuAbierto, setMenuAbierto] = useState(true);
+    const navigate = useNavigate();
+    const { category } = useParams();
+
+    const [expanded, setExpanded] = useState(false);
+
+    const manejarNavegacion = (ruta) => {
+        navigate(ruta);
+        setExpanded(false);
+    };
 
     return (
-        <nav className="navbar navbar-dark bg-dark shadow-sm w-100 py-2" style={{ minHeight: "65px" }}>
-            <div className="container-fluid row align-items-center m-0 p-0 w-100 flex-nowrap">
-                {/* COLUMNA IZQUIERDA (10%): Botón de 3 rayitas SIEMPRE VISIBLE */}
-                <div className="col-2 d-flex justify-content-start ps-3">
-                    <button className="btn btn-dark p-2 border-0" type="button" onClick={() => setMenuAbierto(!menuAbierto)} aria-label="Toggle navigation" style={{ background: "transparent" }}>
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                </div>
+        <Navbar
+            expanded={expanded}
+            onToggle={setExpanded}
+            expand={false}
+            variant="dark"
+            className="nav-ecommerce"
+        >
+            <Container fluid className="nav-container">
 
-                {/* COLUMNA CENTRAL (70%): Categorías horizontales flotando de forma equilibrada */}
-                <div className="col-8 d-flex justify-content-center text-center">
-                    {menuAbierto && (
-                        <ul className="navbar-nav d-flex flex-row gap-2 gap-sm-3 m-0 p-0 list-unstyled bg-dark border border-secondary rounded-3 px-3 py-1 shadow">
-                            <li className="nav-item">
-                                <button className={`btn btn-link text-white nav-link p-1 small ${!category ? "fw-bold text-info" : ""}`} onClick={() => navigate("/")}>
-                                    Inicio
-                                </button>
-                            </li>
-                            <li className="nav-item">
-                                <button className={`btn btn-link text-white nav-link p-1 small ${category === "dama" ? "fw-bold text-info" : ""}`} onClick={() => navigate("/category/dama")}>
-                                    Dama
-                                </button>
-                            </li>
-                            <li className="nav-item">
-                                <button className={`btn btn-link text-white nav-link p-1 small ${category === "caballero" ? "fw-bold text-info" : ""}`} onClick={() => navigate("/category/caballero")}>
-                                    Caballero
-                                </button>
-                            </li>
-                            <li className="nav-item">
-                                <button className={`btn btn-link text-white nav-link p-1 small ${category === "infantil" ? "fw-bold text-info" : ""}`} onClick={() => navigate("/category/infantil")}>
-                                    Infantil
-                                </button>
-                            </li>
-                        </ul>
-                    )}
-                </div>
+                {/* BOTÓN HAMBURGUESA */}
+                <Navbar.Toggle
+                    aria-controls="navbar-ecommerce"
+                    aria-label="Abrir menú de navegación"
+                />
 
-                {/* COLUMNA DERECHA (20%): Carrito estático */}
-                <div className="col-2 d-flex justify-content-end pe-3">
-                    <button className="btn btn-link text-white position-relative p-2 text-decoration-none fw-bold small" onClick={() => navigate("/cart")}>
-                        🛒 Carrito
-                        {totalItems > 0 && (
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: "0.75rem" }}>
-                                {totalItems}
-                            </span>
-                        )}
-                    </button>
-                </div>
-            </div>
-        </nav>
+                {/* MENÚ */}
+                <Navbar.Collapse
+                    id="navbar-ecommerce"
+                    className="nav-collapse"
+                >
+                    <BootstrapNav className="nav-items">
+
+                        <BootstrapNav.Link
+                            active={!category}
+                            onClick={() => manejarNavegacion("/")}
+                        >
+                            Inicio
+                        </BootstrapNav.Link>
+
+                        <BootstrapNav.Link
+                            active={category === "dama"}
+                            onClick={() => manejarNavegacion("/category/dama")}
+                        >
+                            Dama
+                        </BootstrapNav.Link>
+
+                        <BootstrapNav.Link
+                            active={category === "caballero"}
+                            onClick={() => manejarNavegacion("/category/caballero")}
+                        >
+                            Caballero
+                        </BootstrapNav.Link>
+
+                        <BootstrapNav.Link
+                            active={category === "infantil"}
+                            onClick={() => manejarNavegacion("/category/infantil")}
+                        >
+                            Infantil
+                        </BootstrapNav.Link>
+
+                        {/* CARRITO */}
+                        <BootstrapNav.Link
+                            onClick={() => manejarNavegacion("/cart")}
+                            className="cart-link"
+                        >
+                            🛒 Carrito
+
+                            {totalItems > 0 && (
+                                <span className="badge-cart-custom">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </BootstrapNav.Link>
+
+                    </BootstrapNav>
+                </Navbar.Collapse>
+
+            </Container>
+        </Navbar>
     );
 };

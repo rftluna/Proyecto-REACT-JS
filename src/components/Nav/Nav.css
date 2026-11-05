@@ -1,33 +1,159 @@
-.nav-list {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+/* NAVBAR GENERAL */
+.nav-ecommerce {
+    flex: 1 1 auto;
+    min-width: 0;
+    background-color: #212529;
+    padding: 0.5rem 1rem;
+    border-radius: 0;
 }
 
-.nav-list a {
-  font-weight: 500;
-  transition: 0.25s;
+.nav-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
 }
 
-.nav-list a:hover {
-  color: var(--primary);
+/* ENLACES */
+.nav-items {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
 }
 
-.incart {
-  margin-left: 0.4rem;
+.nav-ecommerce .nav-link {
+    color: #ffffff;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
 
-  width: 22px;
-  height: 22px;
+.nav-ecommerce .nav-link:hover,
+.nav-ecommerce .nav-link.active {
+    color: #0dcaf0;
+}
 
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+.nav-ecommerce .nav-link.active {
+    font-weight: bold;
+}
 
-  border-radius: 50%;
+/* CARRITO */
+.cart-link {
+    position: relative;
+    font-weight: bold;
+}
 
-  background: var(--primary);
-  color: white;
+.badge-cart-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 2px 5px;
+    margin-left: 5px;
+    background-color: #dc3545;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
 
-  font-size: 0.75rem;
-  font-weight: bold;
+/* BOTÓN HAMBURGUESA */
+.nav-ecommerce .navbar-toggler {
+    display: block !important;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0.6rem;
+}
+
+/* MENÚ DESPLEGABLE GENERAL */
+.nav-collapse {
+    position: absolute !important;
+    top: 100%;
+    width: 270px !important;
+    max-width: calc(100vw - 20px);
+
+    background-color: #212529;
+    padding: 0.75rem 1rem;
+
+    border: 1px solid #495057;
+    border-radius: 0 0 0.5rem 0.5rem;
+
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+    z-index: 1001;
+}
+
+/* OPCIONES DEL MENÚ */
+.nav-items {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    width: 100%;
+}
+
+.nav-items .nav-link {
+    display: block;
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-items .nav-link:last-child {
+    border-bottom: none;
+}
+
+/* CELULARES Y TABLETS */
+@media (max-width: 991.98px) {
+    .nav-ecommerce {
+        position: static;
+        flex: 1 1 100%;
+        width: 100%;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .nav-container {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    /* HAMBURGUESA A LA IZQUIERDA */
+    .nav-ecommerce .navbar-toggler {
+        margin: 0;
+    }
+
+    /* MENÚ ALINEADO A LA IZQUIERDA */
+    .nav-collapse {
+        left: 0 !important;
+        right: auto !important;
+    }
+}
+
+/* COMPUTADORAS */
+@media (min-width: 992px) {
+    .nav-ecommerce {
+        position: static;
+        flex: 1 1 auto;
+        width: auto;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .nav-container {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* HAMBURGUESA A LA DERECHA */
+    .nav-ecommerce .navbar-toggler {
+        margin-left: auto;
+    }
+
+    /* MENÚ ALINEADO A LA DERECHA */
+    .nav-collapse {
+        left: auto !important;
+        right: 3rem !important;
+    }
 }
